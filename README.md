@@ -2,7 +2,11 @@
 Code for the UCL final project as part of MSc Data Science and Machine Learning. Code is extended from "Code Synonyms Do Matter: Multiple Synonyms Matching Network for Automatic ICD Coding" [ACL 2022] - https://github.com/GanjinZero/ICD-MSMN
 
 # Environment
+To recreate the environment, use the requirements.txt file:
 
+```
+$ conda create --name <env> --file requirements.txt
+```
 
 # Dataset
 In order to gain access to the MIMIC-III dataset, you first need to obtain a licence from PhysioNet: https://physionet.org/content/mimiciii/1.4/
@@ -20,13 +24,13 @@ You need to change the path of word embedding.
 To train a model used in this project, run 1GPU_run_50.sh:
 
 ```
-sh ./1GPU_run_50.sh
+$ sh ./1GPU_run_50.sh
 ```
 
 # Evaluate checkpoints
 Once a model is trained, it can be evaluated like so:
 ```
-python eval_model.py MODEL_CHECKPOINT
+$ python eval_model.py MODEL_CHECKPOINT
 ```
 
 
