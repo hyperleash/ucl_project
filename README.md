@@ -1,14 +1,12 @@
 # ICD-MSMN
-The offical implementation of "Code Synonyms Do Matter: Multiple Synonyms Matching Network for Automatic ICD Coding" [ACL 2022]
+Code for the UCL final project as part of MSc Data Science and Machine Learning. Code is extended from "Code Synonyms Do Matter: Multiple Synonyms Matching Network for Automatic ICD Coding" [ACL 2022] - https://github.com/GanjinZero/ICD-MSMN
 
 # Environment
-All codes are tested under Python 3.7, PyTorch 1.7.0.
-Need to install opt_einsum for einsum calculations.
-At least 32GB GPU are needed for training MIMIC-III full setting.
+
 
 # Dataset
-We only put several samples for each dataset.
-One need to obtain licences to download MIMIC-III dataset.
+In order to gain access to the MIMIC-III dataset, you first need to obtain a licence from PhysioNet: https://physionet.org/content/mimiciii/1.4/
+
 Once you obtain the MIMIC-III dataset, please follow [caml-mimic](https://github.com/jamesmullenbach/caml-mimic) to preprocess the dataset.
 You should obtain **train_full.csv**, **test_full.csv**, **dev_full.csv**, **train_50.csv**, **test_50.csv**, **dev_50.csv** after preprocessing.
 Please put them under **sample_data/mimic3**.
@@ -18,31 +16,21 @@ Then you should use **preprocess/generate_data_new.ipynb** for generating json f
 Please download [word2vec_sg0_100.model](https://github.com/aehrc/LAAT/blob/master/data/embeddings/word2vec_sg0_100.model) from LAAT.
 You need to change the path of word embedding.
 
-# Use our code
-MIMIC-III Full (1 GPU):
-```
-CUDA_VISIBLE_DEVICES=0 python main.py --n_gpu 1 --version mimic3 --combiner lstm --rnn_dim 256 --num_layers 2 --decoder MultiLabelMultiHeadLAATV2 --attention_head 4 --attention_dim 512 --learning_rate 5e-4 --train_epoch 20 --batch_size 2 --gradient_accumulation_steps 8 --xavier --main_code_loss_weight 0.0 --rdrop_alpha 5.0 --est_cls 1  --term_count 4  --sort_method random --word_embedding_path word_embedding_path
-```
+# Training
+To train a model used in this project, run 1GPU_run_50.sh:
 
-MIMIC-III Full (8 GPUs):
 ```
-NCCL_IB_DISABLE=1 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python -m torch.distributed.launch --nproc_per_node 8 --master_port=1212 --use_env  main.py --n_gpu 8 --version mimic3 --combiner lstm --rnn_dim 256 --num_layers 2 --decoder MultiLabelMultiHeadLAATV2 --attention_head 4 --attention_dim 512 --learning_rate 5e-4 --train_epoch 20 --batch_size 2 --gradient_accumulation_steps 1 --xavier --main_code_loss_weight 0.0 --rdrop_alpha 5.0 --est_cls 1  --term_count 4  --sort_method random --word_embedding_path word_embedding_path
-```
-
-MIMIC-III 50:
-```
-CUDA_VISIBLE_DEVICES=0 python main.py --version mimic3-50 --combiner lstm --rnn_dim 512 --num_layers 1 --decoder MultiLabelMultiHeadLAATV2 --attention_head 8 --attention_dim 512 --learning_rate 5e-4 --train_epoch 20 --batch_size 16 --gradient_accumulation_steps 1 --xavier --main_code_loss_weight 0.0 --rdrop_alpha 5.0 --est_cls 1 --term_count 8 --word_embedding_path word_embedding_path
+sh ./1GPU_run_50.sh
 ```
 
 # Evaluate checkpoints
+Once a model is trained, it can be evaluated like so:
 ```
 python eval_model.py MODEL_CHECKPOINT
 ```
-[mimic3 checkpoint](https://drive.google.com/file/d/1Ru9AM3FJuBVWSvPDUV13vWhWDzFw_qAD/view?usp=sharing)
 
-[mimic3-50 checkpoint](https://drive.google.com/file/d/18Ny2R9WLWWa2UpyReaBn-zoSb1Uga9yX/view?usp=sharing)
 
-# Citation
+# Citation for the original MSMN paper
 ```
 @inproceedings{yuan-etal-2022-code,
     title = "Code Synonyms Do Matter: Multiple Synonyms Matching Network for Automatic {ICD} Coding",
